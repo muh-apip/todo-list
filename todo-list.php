@@ -19,9 +19,31 @@ class TodoList extends Base {
     }
 
     public function fetchTodos($status) {
-        $hariIni = isset($_GET['date']) ? date('d F Y', strtotime(htmlspecialchars($_GET['date'], ENT_QUOTES, 'UTF-8'))) : date('d F Y');
+        if (isset($_GET['date'])) {
+            if (!empty($_GET['date'])) {
+                $hariIni = date('d F Y', strtotime(htmlspecialchars($_GET['date'], ENT_QUOTES, 'UTF-8')));
+            } else {
+                $hariIni = date('d F Y');
+            }
+        } else {
+            $hariIni = date('d F Y');
+        }
+
         $id_user = $this->getSession('id');
-        return mysqli_query($this->conn, "SELECT * FROM todos WHERE id_user = '$id_user' AND selesai = '$status' AND tgl = '$hariIni' ORDER BY tgl ASC");
+        
+        if (isset($_GET['filter'])) {
+            if (empty(!$_GET['filter'])) {
+                if ($_GET['filter'] == 'all'){
+                    return mysqli_query($this->conn, "SELECT * FROM todos WHERE id_user = '$id_user' AND selesai = '$status' ORDER BY tgl ASC");
+                } else {
+                    return mysqli_query($this->conn, "SELECT * FROM todos WHERE id_user = '$id_user' AND selesai = '$status' AND tgl = '$hariIni' ORDER BY tgl ASC");
+                }
+            } else {
+                return mysqli_query($this->conn, "SELECT * FROM todos WHERE id_user = '$id_user' AND selesai = '$status' ORDER BY tgl ASC");
+            }
+        } else {
+            return mysqli_query($this->conn, "SELECT * FROM todos WHERE id_user = '$id_user' AND selesai = '$status' ORDER BY tgl ASC");
+        }
     }
 
     public function deleteTodoById($id) {

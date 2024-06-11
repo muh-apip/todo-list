@@ -19,8 +19,8 @@ if (isset($_POST['register'])) {
     $sql = mysqli_query($conn, "INSERT INTO users VALUES (NULL,'$uss','$pw')");
 
     if($sql) {
-        $_SESSION['id'] = mysqli_insert_id($conn);
-        $_SESSION['username'] = $uss;
+        // $_SESSION['id'] = mysqli_insert_id($conn);
+        // $_SESSION['username'] = $uss;
         header("location:index.php");
     } else {
         echo "

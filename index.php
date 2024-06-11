@@ -82,17 +82,35 @@ if (isset($_POST['update'])) {
                 <div class="card shadow-lg ">
                     <div class="card-header">
                         <h3 class="text-center">
-                            TODO LIST <?= isset($_GET['date']) ? date('d F Y', strtotime(htmlspecialchars($_GET['date'], ENT_QUOTES, 'UTF-8'))) : date('d F Y') ?>
+                            TODO LIST <?= 
+                                isset($_GET['date']) ?
+                                (empty(!$_GET['date']) ? 
+                                    date('d F Y', strtotime(htmlspecialchars($_GET['date'], ENT_QUOTES, 'UTF-8'))) : 
+                                    date('d F Y')
+                                ) : 
+                                date('d F Y')
+                            ?>
                         </h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <div class="container">
-                                <div class="row my-3">
-                                    <div class="col-4">
+                                <div class="row my-3 mb-4">
+                                    <div class="col-3">
                                         <div class="input-group input-group-sm">
                                             <input type="date" class="form-control" id="date">
                                             <button class="btn btn-warning btn-sm" id="filter">
+                                                Filter
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group input-group-sm">
+                                            <select class="form-select" id="select">
+                                                <option value="all" selected>Semua</option>
+                                                <option value="today">Hari Ini</option>
+                                            </select>
+                                            <button class="btn btn-warning btn-sm" id="filterSelect">
                                                 Filter
                                             </button>
                                         </div>
@@ -173,7 +191,6 @@ if (isset($_POST['update'])) {
                                                 </span>
                                             </td>
                                             <td class="col-2">
-                                                <button type="button" class="btn btn-sm btn-success" disabled>Selesai</button>
                                                 <a href="./hapus.php?id=<?= htmlspecialchars($data['id'], ENT_QUOTES, 'UTF-8') ?>" class="btn btn-sm btn-outline-danger">Hapus</a>
                                             </td>
                                         </tr>
@@ -273,7 +290,9 @@ if (isset($_POST['update'])) {
     <script>
     $(document).ready(function() {
         let dateValue = getQueryParam('date')
+        let filter = getQueryParam('filter')
         $('#date').val(dateValue)
+        $('#select').val(`${filter ?? 'all'}`).trigger('change')
 
         $('#tambah').click(function() {
             $('#Mtambah').modal('show');
@@ -299,7 +318,14 @@ if (isset($_POST['update'])) {
             let protocol = window.location.protocol
             let hostname = window.location.hostname
             let pathname = window.location.pathname
-            window.location.href = `${protocol}//${hostname}${pathname}?date=` + $('#date').val()
+            window.location.href = `${protocol}//${hostname}${pathname}?date=` + $('#date').val() + '&filter=' + $('#select').val()
+        })
+        
+        $('#filterSelect').click(function () {
+            let protocol = window.location.protocol
+            let hostname = window.location.hostname
+            let pathname = window.location.pathname
+            window.location.href = `${protocol}//${hostname}${pathname}?date=` + $('#date').val() + '&filter=' + $('#select').val()
         })
 
         function getQueryParam(param) {

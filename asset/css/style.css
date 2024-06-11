@@ -3,6 +3,9 @@
     margin: 0;
 }
 
+.d-none {
+    display: none !important;
+}
 
 .content-container {
     margin-top: 20px; /* Adjust the value to increase/decrease the margin */
